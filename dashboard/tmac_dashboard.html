@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMaC Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B2545;
+    --navy-soft: #13315C;
+    --teal: #1B7A8C;
+    --teal-soft: #E4F1F3;
+    --amber: #E8A33D;
+    --amber-soft: #FDF1DF;
+    --bg: #F7F9FB;
+    --panel: #FFFFFF;
+    --text: #14213D;
+    --muted: #64748B;
+    --line: #E2E8F0;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--body), sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px 24px 64px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+  }
+  .subtitle { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
+
+  .loader {
+    background: var(--panel);
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .loader.dragover { border-color: var(--teal); background: var(--teal-soft); }
+  .loader p { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  button {
+    font-family: var(--body), sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: var(--navy-soft); }
+  .btn-ghost { background: transparent; color: var(--teal); border: 1px solid var(--teal); }
+  .btn-ghost:hover { background: var(--teal-soft); }
+  #fileInput { display: none; }
+
+  #dashboard { display: none; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .stat .num {
+    font-family: var(--display);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .stat.amber .num { color: var(--amber); }
+  .stat.teal .num { color: var(--teal); }
+  .stat .label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .charts {
+    display: grid;
+    grid-template-columns: 1.1fr 0.75fr 0.95fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .panel h2 {
+    font-family: var(--display);
+    font-size: 15px;
+    color: var(--navy);
+    margin: 0 0 14px;
+  }
+  .chart-box { position: relative; height: 200px; }
+  .chart-box svg { display: block; }
+  .reg-legend {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 11px;
+    color: var(--text);
+  }
+  .reg-legend li { display: flex; align-items: center; gap: 6px; }
+  .reg-legend .swatch {
+    width: 9px; height: 9px; border-radius: 2px; flex: none;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0 14px;
+  }
+  .filter-btn {
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .filter-btn.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 8px 0 14px;
+  }
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--teal);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .card.has-open { border-left-color: var(--amber); }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .card-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    word-break: break-word;
+  }
+  .card-type { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge.STRIDE { background: var(--teal-soft); color: var(--teal); }
+  .badge.LINDDUN { background: #EFE9F7; color: #6B4FA0; }
+  .status-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot.open { background: var(--amber); }
+  .dot.clean { background: var(--teal); }
+  .status-line.open-text { color: var(--amber); }
+  .status-line.clean-text { color: var(--teal); }
+  .findings { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .finding {
+    background: var(--amber-soft);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .finding .cat {
+    font-family: var(--mono);
+    font-weight: 600;
+    color: #8A5B12;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .finding .reg { color: #7A6A4E; }
+  .finding .root {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #9C7A3C;
+  }
+
+  .disclaimer {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .reload-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; font-size: 12px; color: var(--muted);
+  }
+  .reload-bar button { padding: 6px 12px; font-size: 12px; }
+
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .charts { grid-template-columns: 1fr; }
+    .filter-row { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="eyebrow">Threat-Modelling-as-Code</p>
+      <h1>TMaC Dashboard</h1>
+      <p class="subtitle">Appendix B.5 - Worked Evaluation Scenarios</p>
+    </div>
+    <div class="meta" id="genMeta"></div>
+  </header>
+
+  <div class="loader" id="loader">
+    <p>Load your <strong>tmac_output.json</strong> file to view results.</p>
+    <div class="btn-row">
+      <button class="btn-primary" id="pickFileBtn">Load results file</button>
+      <button class="btn-ghost" id="sampleBtn">Preview with sample data</button>
+    </div>
+    <input type="file" id="fileInput" accept="application/json">
+  </div>
+
+  <div id="dashboard">
+    <div class="reload-bar">
+      <span id="sourceLabel"></span>
+      <button class="btn-ghost" id="reloadBtn">Load a different file</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num" id="statScenarios">0</div><div class="label">Scenarios run</div></div>
+      <div class="stat amber"><div class="num" id="statOpen">0</div><div class="label">Open findings</div></div>
+      <div class="stat teal"><div class="num" id="statMitigated">0</div><div class="label">Mitigated controls</div></div>
+      <div class="stat"><div class="num" id="statClean">0</div><div class="label">Fully mitigated assets</div></div>
+    </div>
+
+    <div class="charts">
+      <div class="panel">
+        <h2>Open findings per scenario</h2>
+        <div class="chart-box" id="barChart"></div>
+      </div>
+      <div class="panel">
+        <h2>Engine split</h2>
+        <div class="chart-box" id="donutChart"></div>
+      </div>
+      <div class="panel">
+        <h2>Regulatory exposure</h2>
+        <div class="chart-box" id="regChart"></div>
+        <ul class="reg-legend" id="regLegend"></ul>
+      </div>
+    </div>
+
+    <p class="section-title">Scenario detail</p>
+    <div class="filter-row" id="engineFilter">
+      <button class="filter-btn active" data-engine="ALL">All scenarios</button>
+      <button class="filter-btn" data-engine="STRIDE">STRIDE only</button>
+      <button class="filter-btn" data-engine="LINDDUN">LINDDUN only</button>
+    </div>
+    <div class="scenario-grid" id="scenarioGrid"></div>
+
+    <p class="disclaimer">This dashboard renders the tmac_output.json export produced by run_scenarios.py against eight hypothetical asset scenarios (Appendix B.5), consistent with the taxonomy in Table 8. No live Synapxe, NEHR, HEALIX, or Tandem infrastructure is accessed by this tool.</p>
+  </div>
+
+</div>
+
+<script>
+const SAMPLE_DATA = {
+  generated: new Date().toISOString(),
+  scenarios: [
+    { scenario_id: 1, asset_name: "sample_asset_a", asset_type: "Model APIs and Inference", engine: "STRIDE", open_count: 1, mitigated_count: 5, open_threats: [{category:"Denial_of_Service", regulation:"Sample regulation reference", root_cause:"rate_limit_configured=False"}], mitigated_threats: ["Spoofing","Tampering","Repudiation","Information_Disclosure","Elevation_of_Privilege"] },
+    { scenario_id: 2, asset_name: "sample_asset_b", asset_type: "Training Data Repository", engine: "LINDDUN", open_count: 2, mitigated_count: 5, open_threats: [{category:"Detectability", regulation:"Sample regulation reference", root_cause:"output_noise_calibrated=False"},{category:"Unawareness", regulation:"Sample regulation reference", root_cause:"consent_capture_documented=False"}], mitigated_threats: ["Linkability","Identifiability","Non_Repudiation","Disclosure_of_Information","Non_Compliance"] },
+    { scenario_id: 3, asset_name: "sample_asset_c", asset_type: "AI Model Inference", engine: "STRIDE", open_count: 0, mitigated_count: 6, open_threats: [], mitigated_threats: ["Spoofing","Tampering","Repudiation","Information_Disclosure","Denial_of_Service","Elevation_of_Privilege"] }
+  ]
+};
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+const REG_FAMILIES = [
+  'ISO/IEC 42001:2023',
+  'ISO/IEC 27001:2022',
+  'Cybersecurity Act 2024',
+  'CSA Guidelines',
+  'HIA 2026',
+  'PSGA IM8',
+  'PDPC 2024 AI Advisory Guidelines',
+  'AIHGle 2.0',
+  'PDPA',
+];
+const REG_PALETTE = ['#1B7A8C', '#6B4FA0', '#E8A33D', '#C0392B', '#2E86AB', '#4C9F70', '#B0559E', '#5C6B73', '#8A5B12'];
+
+function regulationFamily(clause) {
+  const trimmed = clause.trim();
+  for (const family of REG_FAMILIES) {
+    if (trimmed.startsWith(family)) return family;
+  }
+  return trimmed;
+}
+
+function renderBarChart(scenarios) {
+  const container = document.getElementById('barChart');
+  const width = 520, height = 260;
+  const padding = { top: 24, right: 16, bottom: 78, left: 34 };
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+  const maxVal = Math.max(1, ...scenarios.map(s => s.open_count || 0));
+  const n = scenarios.length || 1;
+  const slot = chartWidth / n;
+  const barWidth = Math.max(14, Math.min(44, slot * 0.55));
+
+  const ySteps = Math.min(maxVal, 5);
+  let gridLines = '';
+  for (let i = 0; i <= ySteps; i++) {
+    const val = Math.round((maxVal / ySteps) * i);
+    const y = padding.top + chartHeight - (val / maxVal) * chartHeight;
+    gridLines += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="#E2E8F0" stroke-width="1"/>`;
+    gridLines += `<text x="${padding.left - 8}" y="${y + 3}" font-size="10" fill="#64748B" text-anchor="end" font-family="JetBrains Mono, monospace">${val}</text>`;
+  }
+
+  let bars = '', labels = '';
+  scenarios.forEach((s, i) => {
+    const val = s.open_count || 0;
+    const barHeight = (val / maxVal) * chartHeight;
+    const x = padding.left + i * slot + (slot - barWidth) / 2;
+    const y = padding.top + chartHeight - barHeight;
+    const color = val > 0 ? '#E8A33D' : '#1B7A8C';
+    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth.toFixed(1)}" height="${Math.max(barHeight,1).toFixed(1)}" rx="3" fill="${color}"/>`;
+    bars += `<text x="${(x + barWidth/2).toFixed(1)}" y="${(y - 6).toFixed(1)}" font-size="11" font-weight="600" fill="#14213D" text-anchor="middle" font-family="Inter, sans-serif">${val}</text>`;
+    const lx = (x + barWidth/2).toFixed(1);
+    const ly = padding.top + chartHeight + 14;
+    labels += `<text x="${lx}" y="${ly}" font-size="9" fill="#64748B" text-anchor="end" font-family="JetBrains Mono, monospace" transform="rotate(-40 ${lx} ${ly})">${esc(s.asset_name)}</text>`;
+  });
+
+  container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Open findings per scenario bar chart">${gridLines}${bars}${labels}</svg>`;
+}
+
+function renderDonutChart(scenarios) {
+  const container = document.getElementById('donutChart');
+  const strideCount = scenarios.filter(s => s.engine === 'STRIDE').length;
+  const linddunCount = scenarios.filter(s => s.engine === 'LINDDUN').length;
+  const total = strideCount + linddunCount;
+  const safeTotal = total || 1;
+  const radius = 66, cx = 100, cy = 92, sw = 26;
+  const circumference = 2 * Math.PI * radius;
+  const strideLen = (strideCount / safeTotal) * circumference;
+  const linddunLen = (linddunCount / safeTotal) * circumference;
+
+  const svg = `
+    <svg viewBox="0 0 220 220" width="100%" height="100%" role="img" aria-label="STRIDE versus LINDDUN engine split">
+      <g transform="rotate(-90 ${cx} ${cy})">
+        <circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#E2E8F0" stroke-width="${sw}"/>
+        <circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#1B7A8C" stroke-width="${sw}"
+          stroke-dasharray="${strideLen} ${circumference - strideLen}" stroke-dashoffset="0"/>
+        <circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#6B4FA0" stroke-width="${sw}"
+          stroke-dasharray="${linddunLen} ${circumference - linddunLen}" stroke-dashoffset="${-strideLen}"/>
+      </g>
+      <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D" font-family="Space Grotesk, sans-serif">${total}</text>
+      <text x="${cx}" y="${cy + 16}" text-anchor="middle" font-size="10" fill="#64748B" font-family="Inter, sans-serif">scenarios</text>
+      <g font-family="Inter, sans-serif" font-size="12" fill="#14213D">
+        <circle cx="20" cy="200" r="5" fill="#1B7A8C"/>
+        <text x="32" y="204">STRIDE (${strideCount})</text>
+        <circle cx="130" cy="200" r="5" fill="#6B4FA0"/>
+        <text x="142" y="204">LINDDUN (${linddunCount})</text>
+      </g>
+    </svg>`;
+  container.innerHTML = svg;
+}
+
+function renderRegChart(scenarios) {
+  const svgContainer = document.getElementById('regChart');
+  const legendContainer = document.getElementById('regLegend');
+  const counts = {};
+  scenarios.forEach(s => (s.open_threats || []).forEach(t => {
+    (t.regulation || '').split(';').forEach(part => {
+      if (!part.trim()) return;
+      const family = regulationFamily(part);
+      counts[family] = (counts[family] || 0) + 1;
+    });
+  }));
+
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const total = entries.reduce((sum, [, c]) => sum + c, 0) || 1;
+  const radius = 60, cx = 90, cy = 84, sw = 24;
+  const circumference = 2 * Math.PI * radius;
+
+  let offset = 0;
+  let arcs = `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#E2E8F0" stroke-width="${sw}"/>`;
+  entries.forEach(([name, count], i) => {
+    const len = (count / total) * circumference;
+    const color = REG_PALETTE[i % REG_PALETTE.length];
+    arcs += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="${sw}"
+      stroke-dasharray="${len.toFixed(2)} ${(circumference - len).toFixed(2)}" stroke-dashoffset="${(-offset).toFixed(2)}"/>`;
+    offset += len;
+  });
+
+  svgContainer.innerHTML = `
+    <svg viewBox="0 0 180 180" width="100%" height="100%" role="img" aria-label="Open findings by regulatory instrument">
+      <g transform="rotate(-90 ${cx} ${cy})">${arcs}</g>
+      <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D" font-family="Space Grotesk, sans-serif">${total}</text>
+      <text x="${cx}" y="${cy + 15}" text-anchor="middle" font-size="9" fill="#64748B" font-family="Inter, sans-serif">instrument refs</text>
+    </svg>`;
+
+  legendContainer.innerHTML = entries.map(([name, count], i) =>
+    `<li><span class="swatch" style="background:${REG_PALETTE[i % REG_PALETTE.length]}"></span>${esc(name)} (${count})</li>`
+  ).join('');
+}
+
+let currentScenarios = [];
+let currentEngineFilter = 'ALL';
+
+function renderScenarioCards(scenarios) {
+  const grid = document.getElementById('scenarioGrid');
+  grid.innerHTML = '';
+  const filtered = currentEngineFilter === 'ALL'
+    ? scenarios
+    : scenarios.filter(s => s.engine === currentEngineFilter);
+  filtered.forEach(s => {
+    const hasOpen = (s.open_count || 0) > 0;
+    const card = document.createElement('div');
+    card.className = 'card' + (hasOpen ? ' has-open' : '');
+
+    let findingsHtml = '';
+    if (hasOpen) {
+      findingsHtml = '<div class="findings">' + s.open_threats.map(t =>
+        `<div class="finding"><span class="cat">${esc(t.category)}</span><span class="reg">${esc(t.regulation)}</span>${t.root_cause ? `<span class="root">Root cause: ${esc(t.root_cause)}</span>` : ''}</div>`
+      ).join('') + '</div>';
+    }
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <div class="card-name">${esc(s.asset_name)}</div>
+          <div class="card-type">${esc(s.asset_type)}</div>
+        </div>
+        <span class="badge ${esc(s.engine)}">${esc(s.engine)}</span>
+      </div>
+      <div class="status-line ${hasOpen ? 'open-text' : 'clean-text'}">
+        <span class="dot ${hasOpen ? 'open' : 'clean'}"></span>
+        ${hasOpen ? s.open_count + ' open finding' + (s.open_count > 1 ? 's' : '') : 'All mitigated'}
+      </div>
+      ${findingsHtml}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function formatDateDDMmmYYYY(date) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mmm = months[date.getMonth()];
+  const yyyy = date.getFullYear();
+  const hh = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+  return `${dd}/${mmm}/${yyyy} ${hh}:${min}`;
+}
+
+function renderDashboard(data, sourceLabel) {
+  document.getElementById('loader').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('sourceLabel').textContent = sourceLabel;
+
+  const scenarios = data.scenarios || [];
+  currentScenarios = scenarios;
+  document.getElementById('genMeta').textContent = data.generated
+    ? 'Generated ' + formatDateDDMmmYYYY(new Date(data.generated))
+    : '';
+
+  const totalOpen = scenarios.reduce((s, x) => s + (x.open_count || 0), 0);
+  const totalMitigated = scenarios.reduce((s, x) => s + (x.mitigated_count || 0), 0);
+  const fullyClean = scenarios.filter(x => (x.open_count || 0) === 0).length;
+  document.getElementById('statScenarios').textContent = scenarios.length;
+  document.getElementById('statOpen').textContent = totalOpen;
+  document.getElementById('statMitigated').textContent = totalMitigated;
+  document.getElementById('statClean').textContent = fullyClean;
+
+  renderBarChart(scenarios);
+  renderDonutChart(scenarios);
+  renderRegChart(scenarios);
+  renderScenarioCards(scenarios);
+}
+
+document.querySelectorAll('#engineFilter .filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentEngineFilter = btn.dataset.engine;
+    document.querySelectorAll('#engineFilter .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderScenarioCards(currentScenarios);
+  });
+});
+
+function loadFile(file) {
+  autoPollingActive = false;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      renderDashboard(data, 'Loaded: ' + file.name);
+    } catch (err) {
+      alert('Could not read that file as JSON. Check it is the tmac_output.json file produced by run_scenarios.py.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('pickFileBtn').addEventListener('click', () => {
+  document.getElementById('fileInput').click();
+});
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  if (e.target.files.length) loadFile(e.target.files[0]);
+});
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  autoPollingActive = false;
+  renderDashboard(SAMPLE_DATA, 'Sample data (not your thesis results)');
+});
+document.getElementById('reloadBtn').addEventListener('click', () => {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('loader').style.display = 'block';
+});
+
+const loader = document.getElementById('loader');
+['dragover', 'dragleave', 'drop'].forEach(evt => {
+  loader.addEventListener(evt, (e) => e.preventDefault());
+});
+loader.addEventListener('dragover', () => loader.classList.add('dragover'));
+loader.addEventListener('dragleave', () => loader.classList.remove('dragover'));
+loader.addEventListener('drop', (e) => {
+  loader.classList.remove('dragover');
+  if (e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
+});
+
+// ---- Load tmac_output.json ----
+// Default (this file opened normally): fetch once on load.
+// Add ?live to the URL - e.g. dashboard.html?live - to switch to periodic
+// polling instead, for live demos where run_scenarios.py is re-run on screen.
+// Everything else (rendering, manual load, drag-and-drop) behaves identically
+// in both modes.
+const LIVE_MODE = new URLSearchParams(window.location.search).has('live');
+const POLL_INTERVAL_MS = 4000;
+let lastAutoLoadedJSON = null;
+let autoPollingActive = true;
+
+async function loadTmacOutput() {
+  if (!autoPollingActive) return;
+  try {
+    const res = await fetch('tmac_output.json', { cache: 'no-store' });
+    if (!res.ok) return;
+    const raw = await res.text();
+    if (raw === lastAutoLoadedJSON) return; // unchanged since last check, skip re-render
+    lastAutoLoadedJSON = raw;
+    const label = LIVE_MODE
+      ? 'Auto-loaded: tmac_output.json (live - refreshes automatically)'
+      : 'Auto-loaded: tmac_output.json';
+    renderDashboard(JSON.parse(raw), label);
+  } catch (err) {
+    // Not reachable this cycle (e.g. opened via file://, or server not running yet).
+    // In live mode, the next poll will simply try again.
+  }
+}
+
+loadTmacOutput();
+if (LIVE_MODE) {
+  setInterval(loadTmacOutput, POLL_INTERVAL_MS);
+}
+</script>
+</body>
+</html>

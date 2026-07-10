@@ -1,0 +1,189 @@
+{
+  "generated": "2026-07-09T17:00:28.393343",
+  "scenarios": [
+    {
+      "scenario_id": 1,
+      "asset_name": "healix_inference_api",
+      "asset_type": "Model APIs and Inference",
+      "engine": "STRIDE",
+      "open_count": 1,
+      "mitigated_count": 5,
+      "open_threats": [
+        {
+          "category": "Denial_of_Service",
+          "regulation": "Cybersecurity Act 2024 CII availability obligation; PDPA Protection Obligation; HIA 2026 service continuity",
+          "root_cause": "rate_limit_configured=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Spoofing",
+        "Tampering",
+        "Repudiation",
+        "Information_Disclosure",
+        "Elevation_of_Privilege"
+      ]
+    },
+    {
+      "scenario_id": 2,
+      "asset_name": "healix_training_repository",
+      "asset_type": "Training Data Repository",
+      "engine": "LINDDUN",
+      "open_count": 2,
+      "mitigated_count": 5,
+      "open_threats": [
+        {
+          "category": "Non_Repudiation",
+          "regulation": "PSGA IM8; HIA 2026 storage standards; ISO/IEC 42001:2023 B.7 lifecycle control",
+          "root_cause": "membership_inference_defence=False"
+        },
+        {
+          "category": "Detectability",
+          "regulation": "PDPA Protection Obligation; CSA Guidelines output monitoring; ISO/IEC 42001:2023 B.9 robustness",
+          "root_cause": "output_noise_calibrated=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Linkability",
+        "Identifiability",
+        "Disclosure_of_Information",
+        "Unawareness",
+        "Non_Compliance"
+      ]
+    },
+    {
+      "scenario_id": 3,
+      "asset_name": "tandem_llm_interface",
+      "asset_type": "LLM and RAG User Interaction",
+      "engine": "LINDDUN",
+      "open_count": 1,
+      "mitigated_count": 6,
+      "open_threats": [
+        {
+          "category": "Disclosure_of_Information",
+          "regulation": "PDPA Consent Obligation; PDPC 2024 AI Advisory Guidelines; AIHGle 2.0 transparency requirement",
+          "root_cause": "purpose_binding_enforced=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Linkability",
+        "Identifiability",
+        "Non_Repudiation",
+        "Detectability",
+        "Unawareness",
+        "Non_Compliance"
+      ]
+    },
+    {
+      "scenario_id": 4,
+      "asset_name": "nehr_cross_cluster",
+      "asset_type": "NEHR Record Consolidation",
+      "engine": "STRIDE",
+      "open_count": 1,
+      "mitigated_count": 5,
+      "open_threats": [
+        {
+          "category": "Spoofing",
+          "regulation": "PDPA Protection Obligation; Cybersecurity Act 2024 CII s.8; CSA Guidelines \u00a74.1 identity verification",
+          "root_cause": "mfa_enforced=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Tampering",
+        "Repudiation",
+        "Information_Disclosure",
+        "Denial_of_Service",
+        "Elevation_of_Privilege"
+      ]
+    },
+    {
+      "scenario_id": 5,
+      "asset_name": "aitriage_inference",
+      "asset_type": "AI Model Inference",
+      "engine": "STRIDE",
+      "open_count": 1,
+      "mitigated_count": 5,
+      "open_threats": [
+        {
+          "category": "Tampering",
+          "regulation": "HIA 2026 data integrity standard; ISO/IEC 42001:2023 B.7 data management; PDPA Protection Obligation",
+          "root_cause": "integrity_signed=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Spoofing",
+        "Repudiation",
+        "Information_Disclosure",
+        "Denial_of_Service",
+        "Elevation_of_Privilege"
+      ]
+    },
+    {
+      "scenario_id": 6,
+      "asset_name": "carescribe_speech_to_text",
+      "asset_type": "Speech Recognition AI",
+      "engine": "LINDDUN",
+      "open_count": 1,
+      "mitigated_count": 6,
+      "open_threats": [
+        {
+          "category": "Identifiability",
+          "regulation": "PDPA Protection Obligation; PSGA IM8 data classification; ISO/IEC 42001:2023 B.7",
+          "root_cause": "pseudonymisation_applied=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Linkability",
+        "Non_Repudiation",
+        "Detectability",
+        "Disclosure_of_Information",
+        "Unawareness",
+        "Non_Compliance"
+      ]
+    },
+    {
+      "scenario_id": 7,
+      "asset_name": "cares2_predictive_model",
+      "asset_type": "Clinical Predictive Model",
+      "engine": "LINDDUN",
+      "open_count": 1,
+      "mitigated_count": 6,
+      "open_threats": [
+        {
+          "category": "Non_Repudiation",
+          "regulation": "PSGA IM8; HIA 2026 storage standards; ISO/IEC 42001:2023 B.7 lifecycle control",
+          "root_cause": "membership_inference_defence=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Linkability",
+        "Identifiability",
+        "Detectability",
+        "Disclosure_of_Information",
+        "Unawareness",
+        "Non_Compliance"
+      ]
+    },
+    {
+      "scenario_id": 8,
+      "asset_name": "aimsg_imaging_store",
+      "asset_type": "Medical Imaging Data Store",
+      "engine": "STRIDE",
+      "open_count": 1,
+      "mitigated_count": 5,
+      "open_threats": [
+        {
+          "category": "Information_Disclosure",
+          "regulation": "PDPA Protection Obligation; CSA Guidelines encryption control; ISO/IEC 27001:2022 A.8.24",
+          "root_cause": "encryption_at_rest=False"
+        }
+      ],
+      "mitigated_threats": [
+        "Spoofing",
+        "Tampering",
+        "Repudiation",
+        "Denial_of_Service",
+        "Elevation_of_Privilege"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "assets": [
+    {
+      "name": "healix_inference_api",
+      "asset_type": "Model APIs and Inference",
+      "properties": {
+        "mfa_enforced": true,
+        "integrity_signed": true,
+        "audit_logging": true,
+        "encryption_in_transit": true,
+        "encryption_at_rest": true,
+        "rate_limit_configured": false,
+        "redundancy_zone": true,
+        "least_privilege_iam": true
+      }
+    },
+    {
+      "name": "healix_training_repository",
+      "asset_type": "Training Data Repository",
+      "properties": {
+        "quasi_identifier_review": true,
+        "k_anonymity_threshold": 5,
+        "pseudonymisation_applied": true,
+        "membership_inference_defence": false,
+        "output_noise_calibrated": false,
+        "purpose_binding_enforced": true,
+        "consent_capture_documented": true,
+        "pdpa_obligation_evidence": true,
+        "psga_im8_evidence": true
+      }
+    }
+  ]
+}
