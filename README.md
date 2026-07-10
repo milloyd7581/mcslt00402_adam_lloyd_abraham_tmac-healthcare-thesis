@@ -2,7 +2,8 @@
 
 Supplementary code and artifacts for the MSc thesis:
 
-**[Thesis title — insert final title]**
+**[Evaluating AI-Driven Data Privacy Vulnerabilities and System Breach Mitigations in Singapore's
+Public Healthcare Systems]**
 Adam Lloyd Abraham (Student ID: MCSLT00402)
 Università degli Studi Guglielmo Marconi
 Supervisor: Mr Suryanto
