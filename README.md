@@ -58,7 +58,7 @@ and academic purposes as described in Appendix B.5.
 ## Citation
 
 Abraham, A.L. (2026). *TMaC Pipeline: Scripts, Dashboard, and Outputs* [Software].
-GitHub. https://github.com/[your-username]/tmac-healthcare-thesis
+GitHub. https://github.com/milloyd7581/tmac-healthcare-thesis
 
 <!-- Once archived on Zenodo, replace the line above with the DOI-based citation,
      e.g.: Abraham, A.L. (2026). TMaC Pipeline... [Software]. Zenodo. https://doi.org/xxxxx -->
