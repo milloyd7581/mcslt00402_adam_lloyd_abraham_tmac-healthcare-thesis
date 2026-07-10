@@ -57,8 +57,6 @@ and academic purposes as described in Appendix B.5.
 
 ## Citation
 
-Abraham, A.L. (2026). *TMaC Pipeline: Scripts, Dashboard, and Outputs* [Software].
-GitHub. https://github.com/milloyd7581/tmac-healthcare-thesis
-
-<!-- Once archived on Zenodo, replace the line above with the DOI-based citation,
-     e.g.: Abraham, A.L. (2026). TMaC Pipeline... [Software]. Zenodo. https://doi.org/xxxxx -->
+Abraham, A.L. (2026). milloyd7581/mcslt00402_adam_lloyd_abraham_tmac-healthcare-thesis: 
+v1.0.2 — VIVA Submission Snapshot (Version v1.0.2-viva-submission) [Computer software]. 
+Zenodo. https://doi.org/10.5281/zenodo.21294221
