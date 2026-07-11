@@ -40,7 +40,7 @@ cp tmac_output.json ../dashboard/tmac_output.json
 
 ## Viewing the dashboard
 
-Open `dashboard/tmac_dashboard.html` directly in any browser — no server, build step,
+Open `dashboard/tmac_dashboard.html` directly in any browser - no server, build step,
 or external dependencies required.
 
 - If served from a local web server (or viewed on GitHub Pages) from the same folder,
@@ -58,5 +58,5 @@ and academic purposes as described in Appendix B.5.
 ## Citation
 
 Abraham, A.L. (2026). milloyd7581/mcslt00402_adam_lloyd_abraham_tmac-healthcare-thesis: 
-v1.0.2 — VIVA Submission Snapshot (Version v1.0.2-viva-submission) [Computer software]. 
+v1.0.2 - VIVA Submission Snapshot (Version v1.0.2-viva-submission) [Computer software]. 
 Zenodo. https://doi.org/10.5281/zenodo.21294221
