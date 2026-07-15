@@ -9,13 +9,13 @@ from stride_engine import Asset, evaluate_stride, STRIDE_RULES, stride_root_caus
 from linddun_engine import evaluate_linddun, LINDDUN_RULES, linddun_root_cause
 
 # Regulatory resolution map.
-# Complete Table 8 resolution set across all thirteen categories. Only categories
+# Complete Table 9 resolution set across all thirteen categories. Only categories
 # that return OPEN are printed, so untriggered categories do not appear in the
 # printed output.
 STRIDE_REG = {
     'Spoofing': 'PDPA Protection Obligation; Cybersecurity Act 2024 CII s.8; CSA Guidelines §4.1 identity verification',
     'Tampering': 'HIA 2026 data integrity standard; ISO/IEC 42001:2023 B.7 data management; PDPA Protection Obligation',
-    # Repudiation is included for STRIDE completeness; it is not separately enumerated in Table 8.
+    # Repudiation is included for STRIDE completeness; it is not separately enumerated in Table 9.
     'Repudiation': 'HIA 2026 audit trail requirement; PSGA IM8 audit logging; ISO/IEC 27001:2022 A.8.15',
     'Information_Disclosure': 'PDPA Protection Obligation; CSA Guidelines encryption control; ISO/IEC 27001:2022 A.8.24',
     'Denial_of_Service': 'Cybersecurity Act 2024 CII availability obligation; PDPA Protection Obligation; HIA 2026 service continuity',
